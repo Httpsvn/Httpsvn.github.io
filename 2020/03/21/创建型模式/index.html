@@ -15,7 +15,7 @@
 <meta property="og:description" content="我们好奇一个事物的创建过程，但在想是使用它的时候，我们更需要简单的得到。简单工厂模式由一个类提供一个方法，通过传入的参数来实例化请求对象。也就是说判断实例化哪个对象，是在这个类内部进行的。 1234567891011121314151617Class Arithmetic&amp;#123;            public  void CreateSymbol(string tag)&amp;#123;">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-21T08:13:06.000Z">
-<meta property="article:modified_time" content="2020-03-21T13:10:48.947Z">
+<meta property="article:modified_time" content="2020-03-23T06:26:23.323Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="设计模式">
 <meta property="article:tag" content="创建型模式">
@@ -130,16 +130,64 @@
 <p>客户端调用</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Client&#123;</span><br><span class="line"></span><br><span class="line">   public void main()&#123;</span><br><span class="line">     IFactory af &#x3D; new AFactory()</span><br><span class="line">     Chocolate chA&#x3D; af.CreateChocolate();</span><br><span class="line"></span><br><span class="line">     IFactory bf &#x3D; new BFactory()</span><br><span class="line">     Chocolate chB&#x3D; bf.CreateChocolate();</span><br><span class="line">     &#x2F;&#x2F;只需要切换工厂生产的巧克力就有不一样了</span><br><span class="line">     print(小红买的是+chA)</span><br><span class="line">     print(小明买的是+chB)</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这个与<code>工厂模式</code>的不同在于，<code>工厂模式</code>只关心对于<code>工厂</code>的扩展，而<code>抽象工厂</code>开始注意工厂与需求者之间的交互，这样使得我们仅通过抽象就可大致明白类之间的关系。</p>
+<p>这个与<code>工厂模式</code>的不同在于，<code>工厂模式</code>只关心对于<code>工厂</code>的扩展，生产同等级的产品(生成的都是Symbol)，而<code>抽象工厂</code>抽象类中的相同业务。</p>
 <p>但是如果过于在意之间的交互，必然耦合严重，只要<code>知道</code> <code>耦合的是关系</code>，并<code>不是具体的类</code>，这就是<code>抽象工厂</code>的核心</p>
 <p><font color=#ff0000 size=15>但是</font>  </p>
 <p><code>抽象工厂</code>有一个致命的缺点：可以扩展种类，极难扩展业务。  </p>
 <p>比如我要一个工厂生产徐福记巧克力，我写一个工厂类，一个巧克力的类，就可以了。<br>但如果我要工厂开始生产奶糖，必然要修改工厂接口，那么其他工厂也必须进行修改。<br>这个问题可以通过将<code>IFactory</code>接口修改成抽象类，其中生产奶糖的不是抽象方法，实现工厂的时候可以实现需要的方法即可，在客户端进行判断这里是不是卖奶糖。</p>
+<h2 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h2><h2 id="生活还是活着这是一个问题"><a href="#生活还是活着这是一个问题" class="headerlink" title="生活还是活着这是一个问题"></a><code>生活</code>还是<code>活着</code>这是一个问题</h2><p>我们的<code>活着</code>是由基础的生活资料构成，这些必不可少，而后自由、文明构成了<code>生活</code>的环境。<code>生活</code>标准虽然在每个时代是不同的，但作为人类确是相同的。</p>
+<blockquote>
+<p>将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line"></span><br><span class="line">   Person(食物，水，空气)&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   public void 自由()&#123;</span><br><span class="line">        this.自由&#x3D;true;    </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">   public void 文明()&#123;</span><br><span class="line">        this.文明&#x3D;true;   </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">   public void 人权()&#123;</span><br><span class="line">        this.人权&#x3D;true;   </span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们构建一个古人类的时候只需要为他提供基础的生活资料:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person 古人类 &#x3D;new Person(食物，水，空气)</span><br></pre></td></tr></table></figure>
+
+<p>但我们构建一个现代人的时候,我们将为他提供<code>生活</code>所必要的东西:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Person 现代人 &#x3D;new Person(食物，水，空气)</span><br><span class="line">现代人.自由()</span><br><span class="line">现代人.文明()</span><br><span class="line">现代人.人权()</span><br></pre></td></tr></table></figure>
+
+<p>通过以上可以知道，<code>建造者模式</code>通过保留核心，扩展特性，完成构建。我们如果需要构建一个超人添加一个超能力的属性即可，构造其他的人类的代码可以不进行修改。</p>
+<p>但是把所有的构造过程展示在客户端，这样并不优雅。</p>
+<p>客户端的目的是想要一个超人，构建过程客户端并不关心，所以结合<code>工厂模式</code>修改代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">abstract class PersonBuilder&#123;</span><br><span class="line"></span><br><span class="line">         Person(食物，水，空气)&#123;</span><br><span class="line">       </span><br><span class="line">           &#125; </span><br><span class="line">   public abstract void 自由();</span><br><span class="line">   public abstract void 文明();</span><br><span class="line">   public abstract void 人权();</span><br><span class="line">   public abstract void 超能力();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>超人类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class SuperMan : PersonBuilder()&#123;</span><br><span class="line"></span><br><span class="line">   SuperMan(食物，水，空气):base(食物，水，空气)&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   public void 自由()&#123;</span><br><span class="line">        this.自由&#x3D;true;    </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">   public void 文明()&#123;</span><br><span class="line">        this.文明&#x3D;true;   </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">   public void 人权()&#123;</span><br><span class="line">        this.人权&#x3D;true;   </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">   public void 超能力()&#123;</span><br><span class="line">        this.人权&#x3D;true;   </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再有<code>工厂</code>提供出去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public PersonFactory&#123;</span><br><span class="line"></span><br><span class="line">    PersonBuilder personBuilder;</span><br><span class="line">  </span><br><span class="line">    PersonFactory(PersonBuilder personBuilder)&#123;</span><br><span class="line">           this.personBuilder&#x3D;personBuilder</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    public void CreatePerson()&#123;</span><br><span class="line"></span><br><span class="line">       personBuilder.自由();</span><br><span class="line">       personBuilder.文明();</span><br><span class="line">       personBuilder.人权();</span><br><span class="line">       personBuilder.超能力();</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Person 超人 &#x3D;new SuperMan(食物，水，空气);</span><br><span class="line">PersonFactory 超人工厂 &#x3D; new  PersonFactory(超人);</span><br><span class="line">超人工厂.CreatePerson();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Person 古人类 &#x3D;new SuperMan(食物，水，空气);</span><br><span class="line">&#x2F;&#x2F;古人类 属性都是false</span><br><span class="line">PersonFactory 古人类 &#x3D; new  PersonFactory(超人);</span><br><span class="line">古人类.CreatePerson();</span><br></pre></td></tr></table></figure>
+
+<p>对于以后的扩展我们可以对不抽象方法，来实现扩展。</p>
+<h2 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h2><p>当对象相同或相似的时候，当创建一个类相对麻烦的时候，可以用复制解决。原型模式的实现方式，就是通过实现语言的克隆方法，实现对对象的复制。</p>
+<p>这种克隆对于语言而言，大多是浅拷贝，只能复制对象中非引用类型的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    class Person&#123;</span><br><span class="line">       string name;</span><br><span class="line">       string age;</span><br><span class="line">       Gift gift;</span><br><span class="line">    &#125;</span><br><span class="line">&#x2F;&#x2F; 客户端</span><br><span class="line">Person p1&#x3D; new Person();</span><br><span class="line">p1.gift&#x3D; new Gift(&quot;美术&quot;);</span><br><span class="line">Person p2 &#x3D; p1.clone();</span><br><span class="line">&#x2F;&#x2F;这是 p2.gift是空的</span><br></pre></td></tr></table></figure>
+
+<h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><h2 id="你是我世界的唯一"><a href="#你是我世界的唯一" class="headerlink" title="你是我世界的唯一"></a>你是我世界的唯一</h2><p>为了节约资源，保存内容的一直性，对某些类要求只能创建一个实例对象。</p>
+<p>单例的阐述到此为止，我相信大多数人学习的一个设计模式就是单例模式。</p>
+<h3 id="单列的写法"><a href="#单列的写法" class="headerlink" title="单列的写法"></a>单列的写法</h3><ol>
+<li>懒汉式单例</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class LazySingleton</span><br><span class="line">&#123;</span><br><span class="line">    private static volatile LazySingleton instance&#x3D;null;    &#x2F;&#x2F;保证 instance 在所有线程中同步</span><br><span class="line">    private LazySingleton()&#123;&#125;    &#x2F;&#x2F;private 避免类在外部被实例化</span><br><span class="line">    public static synchronized LazySingleton getInstance()</span><br><span class="line">    &#123;</span><br><span class="line">        &#x2F;&#x2F;getInstance 方法前加同步</span><br><span class="line">        if(instance&#x3D;&#x3D;null)</span><br><span class="line">        &#123;</span><br><span class="line">            instance&#x3D;new LazySingleton();</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：如果编写的是多线程程序，则不要删除上例代码中的关键字 volatile 和 synchronized，否则将存在线程非安全的问题。如果不删除这两个关键字就能保证线程安全，但是每次访问时都要同步，会影响性能，且消耗更多的资源，这是懒汉式单例的缺点。</p>
+<ol start="2">
+<li>饿汉式单例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class HungrySingleton</span><br><span class="line">&#123;</span><br><span class="line">    private static final HungrySingleton instance&#x3D;new HungrySingleton();</span><br><span class="line">    private HungrySingleton()&#123;&#125;</span><br><span class="line">    public static HungrySingleton getInstance()</span><br><span class="line">    &#123;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>饿汉式单例在类创建的同时就已经创建好一个静态的对象供系统使用，以后不再改变，所以是线程安全的，可以直接用于多线程而不会出现问题。</p>
+<p>参考资料：</p>
+<ul>
+<li><a href="http://c.biancheng.net/design_pattern/" target="_blank" rel="noopener" title="C语言中文网 设计模式">C语言中文网</a></li>
+<li><a href="https://baike.baidu.com/item/%E5%A4%A7%E8%AF%9D%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/85262" target="_blank" rel="noopener" title="大话设计模式 实体书">大话设计模式</a></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/03/21/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" data-id="ck81mu27j0000w4vl915k8h0u" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/03/21/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" data-id="ck84f1uw00004asvl7bxac09e" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" rel="tag">创建型模式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
@@ -149,6 +197,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2020/03/23/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          结构型模式
+        
+      </div>
+    </a>
   
   
     <a href="/2020/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%9B%AE%E7%9A%84/" id="article-nav-older" class="article-nav-link-wrap">
@@ -172,7 +229,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" rel="tag">创建型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" rel="tag">创建型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/" rel="tag">结构型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/" rel="tag">行为模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -182,7 +239,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">创建型模式</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 20px;">设计模式</a>
+      <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">创建型模式</a> <a href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">结构型模式</a> <a href="/tags/%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">行为模式</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 20px;">设计模式</a>
     </div>
   </div>
 
@@ -204,6 +261,14 @@
       <ul>
         
           <li>
+            <a href="/2020/03/23/%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/">行为模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/23/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/">结构型模式</a>
+          </li>
+        
+          <li>
             <a href="/2020/03/21/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/">创建型模式</a>
           </li>
         
@@ -213,10 +278,6 @@
         
           <li>
             <a href="/2020/03/21/Hexo-GitHub%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%90%AD%E5%BB%BA/">Hexo+GitHub博客系统的搭建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/21/hello-world/">Hello World</a>
           </li>
         
       </ul>
